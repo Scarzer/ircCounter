@@ -77,6 +77,7 @@ bot.addListener("message", function(from, to, text, message){
 
     if(regText){
         if(regText[0] === '!list') getPlayers() // Call the function for the callback!
+        else if(regText[0] === '!info') ductTape.emit('printInfo', from)
     }
 
 });
