@@ -20,7 +20,7 @@ var command = /^![a-zA-Z0-9]*/
 var config = {
     channels: ["#OmicronMC"],
     server: "irc.insomniairc.net",
-    botName: "Countz"
+    botName: "Senseus"
 };
 
 /////////////////////////////////////////////////////////////////
