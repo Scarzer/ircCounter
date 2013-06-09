@@ -10,7 +10,9 @@
 var http = require('http'),
     cheerio = require('cheerio'),
     request = require('request'),
-    query = require('querystring')
+    query = require('querystring'),
+    emitter = require('events').EventEmitter
+    ductTape = new emitter()
 
 var command = /![a-zA-Z0-9]*/
     
@@ -32,16 +34,23 @@ function getPlayers(){
         }
 
         leBody = cheerio.load(body);
-        var foo = leBody(".online-player-heads");
+        var foo = leBody(".online-players");
         var people = foo[0].children
+        console.log(people)
         for (var things in people){
             if (people[things].hasOwnProperty('attribs')){
                 var string = people[things].attribs['href'];
                 currPlayers.push(query.parse(string).name)
+
+                if(people[things].attribs['class'] === 'online-player-heads'){
+                    console.log(people[things].children)
+                }
              }
         }
+        console.log(currPlayers)
+        ductTape.emit('currPlayers', currPlayers);
+
     })
-    return currPlayers
 
 }
 
@@ -64,7 +73,15 @@ bot.addListener("message", function(from, to, text, message){
 
 
     if(regText){
-        if(regText[0] === '!list') console.log("Getting a list of people")
+        if(regText[0] === '!list') getPlayers() // Call the function for the callback!
     }
 
 });
+
+
+//////////// Listeners!
+
+ductTape.on('currPlayers', function(currPlayers){
+    bot.say(config.channels[0], "Currently, the server reads " + currPlayers.length + " people")
+})
+
