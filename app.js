@@ -7,6 +7,11 @@
  * To change this template use File | Settings | File Templates.
  */
 
+var http = require('http'),
+    cheerio = require('cheerio'),
+    request = require('request'),
+    query = require('querystring')
+
 var command = /![a-zA-Z0-9]*/
     
 
@@ -16,7 +21,31 @@ var config = {
     botName: "Countz"
 };
 
-var currentUsers = {}
+/////////////////////////////////////////////////////////////////
+function getPlayers(){
+    var currPlayers = [];
+    var leBody = "";
+    request('http://destiny.justin-mp.net/Minecraft/', function(error, response, body){
+        if(error){
+            console.log("There was an error!")
+            return 0
+        }
+
+        leBody = cheerio.load(body);
+        var foo = leBody(".online-player-heads");
+        var people = foo[0].children
+        for (var things in people){
+            if (people[things].hasOwnProperty('attribs')){
+                var string = people[things].attribs['href'];
+                currPlayers.push(query.parse(string).name)
+             }
+        }
+    })
+    return currPlayers
+
+}
+
+
 
 var irc = require("irc");
 
