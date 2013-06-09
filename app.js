@@ -85,6 +85,20 @@ bot.addListener("message", function(from, to, text, message){
 //////////// Listeners!
 
 ductTape.on('currPlayers', function(currPlayers){
-    bot.say(config.channels[0], "Currently, the server reads " + currPlayers.length + " people")
+    var printer = "Currently, "
+    switch(currPlayers.length){
+        case(0):
+            printer = printer + "there is no body online!"
+            break
+
+        case(1):
+            printer = printer + "there is only one person online: "
+            break
+
+        default:
+            printer = printer + "there are " + currPlayers.length + " people online: "
+    }
+
+    bot.say(config.channels[0], printer + currPlayers)
 })
 
