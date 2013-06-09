@@ -104,7 +104,7 @@ ductTape.on('currPlayers', function(currPlayers){
 })
 
 ductTape.on('printInfo', function(caller){
-    var printer = "Thank you " + caller + "for asking about what" +
+    var printer = "Thank you " + caller + " for asking about what" +
         " I can do. My commands are: !list, !info"
     bot.say(config.channels[0], printer)
 
