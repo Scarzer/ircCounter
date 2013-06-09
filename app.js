@@ -34,13 +34,16 @@ function getPlayers(){
         }
 
         leBody = cheerio.load(body);
+        // Find the div with the online players!
         var foo = leBody(".online-players");
         var people = foo[0].children
         console.log(people)
         for (var things in people){
             if (people[things].hasOwnProperty('attribs')){
+                // If the child is a player, proceed!
                 if(people[things].attribs['class'] === 'online-player-heads'){
                     var kids = people[things].children;
+                    // For every name, pop out the query name, and push it into the array!
                     for(var name in kids){
                         if(kids[name].hasOwnProperty('attribs')){
                             var string = kids[name].attribs['href']
