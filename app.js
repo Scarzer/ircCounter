@@ -14,7 +14,7 @@ var http = require('http'),
     emitter = require('events').EventEmitter
     ductTape = new emitter()
 
-var command = /![a-zA-Z0-9]*/
+var command = /^![a-zA-Z0-9]*/
     
 
 var config = {
@@ -100,5 +100,12 @@ ductTape.on('currPlayers', function(currPlayers){
     }
 
     bot.say(config.channels[0], printer + currPlayers)
+})
+
+ductTape.on('printInfo', function(caller){
+    var printer = "Thank you " + caller + "for asking about what" +
+        " I can do. My commands are: !list, !info"
+    bot.say(config.channels[0], printer)
+
 })
 
