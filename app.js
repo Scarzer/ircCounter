@@ -39,11 +39,14 @@ function getPlayers(){
         console.log(people)
         for (var things in people){
             if (people[things].hasOwnProperty('attribs')){
-                var string = people[things].attribs['href'];
-                currPlayers.push(query.parse(string).name)
-
                 if(people[things].attribs['class'] === 'online-player-heads'){
-                    console.log(people[things].children)
+                    var kids = people[things].children;
+                    for(var name in kids){
+                        if(kids[name].hasOwnProperty('attribs')){
+                            var string = kids[name].attribs['href']
+                            currPlayers.push(query.parse(string).name)
+                        }
+                    }
                 }
              }
         }
