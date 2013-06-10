@@ -22,7 +22,6 @@ var config = {
     botName: "Senseus",
     userName: "Senseus",
     realName: "Senseus Valderin",
-    password : "mcBot",
     channels : ['#OmicronMC']
     
 };
@@ -80,7 +79,6 @@ var irc = require("irc");
 
 var bot = new irc.Client(config.server, config.botName, {
     channels: config.channels,
-    password: config.password
 });
 
 
