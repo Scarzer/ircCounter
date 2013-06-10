@@ -150,15 +150,15 @@ ductTape.on('printStat', function(caller){
     timez -= hh * 1000 * 60 * 60;
     var mm = Math.floor(diff / 1000 / 60);
     timez -= mm * 1000 * 60;
-    var ss = Math.floor(msec / 1000);
+    var ss = Math.floor(diff / 1000);
     timez -= ss * 1000;
     
     // Build up message
-    printer = printer + "I have been online since " + stat.startTime + "\n"
-    printer = printer + "That calculates to be " + hh + ":" + mm + ":" + ss + "\n"
-    printer = printer + "I have been called " + stat.timesUsed + "\n"
-    printer = printer + "The most people I've seen online is " + stat.mostOnline + "\n"
-    printer = printer + "Before you, the last person to call me was " + stat.lastCaller + "\n"
+    printer = printer + "I have been online since " + stat.startTime + ","
+    printer = printer + "That calculates to be " + hh + ":" + mm + ":" + ss + ","
+    printer = printer + "I have been called " + stat.timesUsed + " times,"
+    printer = printer + "The most people I've seen online is " + stat.mostOnline + ","
+    printer = printer + "Before you, the last person to call me was " + stat.lastCaller + ","
 
     bot.say(config.channels[0], printer);
     stat.lastCaller = caller;
