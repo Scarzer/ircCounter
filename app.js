@@ -18,10 +18,23 @@ var command = /^![a-zA-Z0-9]*/
     
 
 var config = {
-    channels: ["#OmicronMC"],
     server: "irc.insomniairc.net",
-    botName: "Senseus"
+    botName: "Senseus",
+    userName: "Senseus",
+    realName: "Senseus Valderin",
+    password : "mcBot",
+    channels : ['#OmicronMC']
+    
 };
+
+var stat = {
+    startTime : Date(),
+    uptime : Date.now(),
+    timesUsed : 0,
+    mostOnline : 0,
+    lastCaller : "Windy"
+    
+}
 
 /////////////////////////////////////////////////////////////////
 function getPlayers(){
@@ -52,6 +65,7 @@ function getPlayers(){
                     }
                 }
              }
+
         }
         console.log(currPlayers)
         ductTape.emit('currPlayers', currPlayers);
@@ -65,22 +79,31 @@ function getPlayers(){
 var irc = require("irc");
 
 var bot = new irc.Client(config.server, config.botName, {
-    channels: config.channels
+    channels: config.channels,
+    password: config.password
+});
+
+
+bot.on('join', function(channel, nick, message){
+    if(config.botname === nick){
+        bot.send('/ns identify mcBot')
+    }
 });
 
 bot.addListener("message", function(from, to, text, message){
     var regText = text.match(command)
 
-
     if(to === config.botName){
         console.log("Messaged recieved")
         bot.say(from, "Thank you for your message");
+        console.log(text)
     }
 
 
     if(regText){
         if(regText[0] === '!list') getPlayers() // Call the function for the callback!
         else if(regText[0] === '!info') ductTape.emit('printInfo', from)
+        else if(regText[0] === '!stat') ductTape.emit('printStat', from)
     }
 
 });
@@ -104,12 +127,46 @@ ductTape.on('currPlayers', function(currPlayers){
     }
 
     bot.say(config.channels[0], printer + currPlayers)
+    stat.lastCaller = caller;
+    stat.timesUsed++;
+    // Check if most amount of players seen!
+    if(currPlayers.length > stat.mostOnline) stat.mostOnline = currPlayers.length
 })
 
 ductTape.on('printInfo', function(caller){
     var printer = "Thank you " + caller + " for asking about what" +
-        " I can do. My commands are: !list, !info"
+        " I can do. My commands are: !list, !info, !stat"
     bot.say(config.channels[0], printer)
+    stat.lastCaller = caller;
+    stat.timesUsed++;
 
 })
+
+ductTape.on('printStat', function(caller){
+    var printer = "Thank you " + caller + " for asking about my credantials.\n" 
+    // Time Parser
+    var diff = timez = Date.now() - stat.uptime
+    var hh = Math.floor(diff / 1000 / 60 / 60);
+    timez -= hh * 1000 * 60 * 60;
+    var mm = Math.floor(diff / 1000 / 60);
+    timez -= mm * 1000 * 60;
+    var ss = Math.floor(msec / 1000);
+    timez -= ss * 1000;
+    
+    // Build up message
+    printer = printer + "I have been online since " + stat.startTime + "\n"
+    printer = printer + "That calculates to be " + hh + ":" + mm + ":" + ss + "\n"
+    printer = printer + "I have been called " + stat.timesUsed + "\n"
+    printer = printer + "The most people I've seen online is " + stat.mostOnline + "\n"
+    printer = printer + "Before you, the last person to call me was " + stat.lastCaller + "\n"
+
+    bot.say(config.channels[0], printer);
+    stat.lastCaller = caller;
+    stat.timesUsed++;
+
+})
+
+
+
+
 
